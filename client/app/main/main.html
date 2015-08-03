@@ -1,28 +1,148 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<header class="hero-unit" id="banner">
-  <div class="container">
-    <h1>'Allo, 'Allo!</h1>
-    <p class="lead">Kick-start your next web app with Angular Fullstack</p>
-    <img src="assets/images/yeoman.png" alt="I'm Yeoman">
-  </div>
-</header>
 
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <h1 class="page-header">Features:</h1>
-      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in awesomeThings">
-        <li><a href="#" tooltip="{{thing.info}}">{{thing.name}}</a></li>
-      </ul>
+<!-- Logged-out View -->
+
+<div ng-hide="isLoggedIn()">
+
+  <header class="hero-unit" id="banner">
+    <div class="container">
+      <h1>VotePlex</h1>
+      <p class="lead">Create custom polls with live results.</p>
+      <a id="signup" class="btn btn-success" href="/signup">Sign Up</a>
     </div>
+  </header>
+  
+  <div class="container" id="frontpage-info">
+    <div class="row">
+      <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+		<i class="fa fa-bolt"></i>
+		<h3>Live Results</h3>
+		<p>Live graphs show your poll results immediately in an easy to understand 
+		format. One graph will not provide the whole picture, that's why we provide multiple 
+		graph types to better describe your results.</p>
+	  </div>
+	  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+		<i class="fa fa-globe"></i>
+		<h3>Works Everywhere</h3>
+		<p>Traditional desktop computers now represent only 30% of Internet traffic. Your 
+		poll must work on the tablets, smart phones, netbooks and notebooks that your 
+		visitors are using. Our responsive designs do just that.</p>
+	  </div>
+	  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+		<i class="fa fa-facebook"></i>
+		<h3>Social Integration</h3>
+		<p>Free integrated facebook or traditional comments allow your poll voters to 
+		provide immediate feedback and discuss results. Social share buttons encourage your 
+		poll voters to help spread the word.</p>
+	  </div>
+	</div>
   </div>
+  
+  <footer class="footer">
+    <div class="container">
+      <p>FreeCodeCamp Basejump |
+      <a href="http://www.freecodecamp.com/nancyj">Nancy Jiang</a>
+      </p>
+    </div>
+  </footer>
+  
 </div>
 
-<footer class="footer">
-  <div class="container">
-      <p>Angular Fullstack v2.1.0 |
-        <a href="https://twitter.com/tyhenkel">@tyhenkel</a> |
-         <a href="https://github.com/DaftMonk/generator-angular-fullstack/issues?state=open">Issues</a></p>
+<!-- Logged-in View -->
+
+<div ng-show="isLoggedIn()">
+
+  <div class="tabbable tabs-below">
+  
+	<header class="hero-unit" id="banner">
+	  <div class="container">
+		<h1>Dashboard</h1>
+		<p class="lead">What would you like to do today?</p>
+		<div class="nav nav-pills">
+		  <a href="#" class="btn btn-success" id="tab1"
+		    ng-click="selectedTab = 1;" 
+		    ng-class="{active: selectedTab == 1}">
+			New Poll
+		  </a>
+		  <a href="#" class="btn btn-primary" id="tab2"
+		    ng-click="selectedTab = 2; expanded = false;" 
+		    ng-class="{active: selectedTab == 2}">
+		    My Polls
+		  </a>
+		  <a href="#" class="btn btn-default" id="tab3"
+		    ng-click="selectedTab = 3; totalVotes();" 
+		    ng-class="{active: selectedTab == 3}">
+		    Aggregate
+		  </a>
+		</div>
+	  </div>
+	</header> 
+  
+    <button ng-click="testFunction()">test Button</button>
+  	<div id="test">testing</div>
+
+	<div class="tab-content" ng-show="selectedTab == null || selectedTab == 1">
+	  <div class="container" id="new-poll">
+		<h2>New Poll</h2>
+		<form role="form">
+		  <div class="form-group" id="question">
+		   <label>Name your poll</label>
+		   <input type="text" class="form-control"
+		   	 placeholder="What is your favorite brand?" ng-model="question">
+		  </div>
+		  <div class="form-group" id="options">
+			<label>Options</label>
+			<input type="text" class="form-control" placeholder="Pepsi">
+			<input type="text" class="form-control" placeholder="Coca-cola">
+		  </div>
+		  <input type="submit" class="btn btn-default poll-buttons" id="more-options" 
+			value="More Options" ng-click="moreOptions()">
+		  <br>
+		  <input type="submit" class="btn btn-success" 
+			value="Submit" ng-click="addPoll(); selectedTab = 2;">
+		</form>
+	  </div>
+	</div>
+  
+	<div class="tab-content" ng-show="selectedTab == 2">
+	  <ul class="container" id="my-polls" ng-repeat="poll in polls" ng-hide="expanded">
+		<li class="stacked-poll" ng-if="isMyPoll(poll)" ng-click="expandPoll(poll)">
+		  <span>{{ poll.question }}</span>
+		  <button type="button" ng-click="deletePoll(poll)">&times;</button>  
+		</li>
+	  </ul>
+	  <div class="container" id="expanded-poll" ng-show="expanded && !voted">
+		<h2>{{ expandedPoll.question }}</h2>
+		<p>by {{ expandedPoll.madeBy }}</p>
+		<form role="form">
+		  <div class="form-group" id="poll-options"></div>
+		  <input type="submit" class="btn btn-success" value="Vote!"
+		  ng-click="votePoll(expandedPoll)">
+		</form>
+	  </div>
+	  <div class="container" id="expanded-poll" ng-show="expanded && voted">
+		<h2>Voted Chart Area</h2>
+		<canvas id="chart" height="300" width="400"></canvas>
+	  </div>
+	</div>
+	
+	<div class="tab-content" ng-show="selectedTab == 3">
+	  <div class="container" id="aggregate-polls">
+	    <span id="total-voters"></span>
+	    <ul class="container" id="my-polls" ng-repeat="poll in polls" ng-hide="expanded">
+		<li ng-if="isMyPoll(poll)">
+		  <span>Poll Question: {{ poll.question }}</span><br>
+		  <span>Total votes on this poll: {{ poll.votedBy.length }}</span><br>
+		  <div ng-repeat="(option, votes) in poll.options">
+		    <span>{{option}}: {{ votes }} vote(s)</span>
+		  </div>
+		</li>
+	    </ul>
+	  </div>
+	</div>
+	
   </div>
-</footer>
+  
+</div>
+

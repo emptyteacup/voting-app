@@ -1,0 +1,16 @@
+User Story: As an authenticated user, I can keep my polls and come back later to access them.
+User Story: As an authenticated user, I can share my polls with my friends.
+User Story: As an authenticated user, I can see the aggregate results of my polls.
+User Story: As an authenticated user, I can delete polls that I decide I don't want anymore.
+User Story: As an authenticated user, I can create a poll with any number of possible items.
+Bonus User Story: As an unauthenticated user, I can see everyone's polls, but I can't vote on anything.
+Bonus User Story: As an unauthenticated or authenticated user, I can see the results of polls in chart form. (This could be implemented using Chart.js or Google Charts.)
+Bonus User Story: As an authenticated user, if I don't like the options on a poll, I can create a new option.
+
+- share polls function
+- aggregate results of polls
+	- total poll takers
+	- display all polls in chart format and in data format
+- both kinds of users: list everyone's polls
+	- option for question format or chart format
+- ability to add an option to your own poll

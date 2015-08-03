@@ -6,6 +6,10 @@ var mongoose = require('mongoose'),
 var ThingSchema = new Schema({
   name: String,
   info: String,
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   active: Boolean
 });
 

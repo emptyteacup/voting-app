@@ -14,7 +14,7 @@ var Thing = require('./thing.model');
 
 // Get list of things
 exports.index = function(req, res) {
-  Thing.find(function (err, things) {
+  Thing.find().populate('user',' name').exec(function (err, things) {
     if(err) { return handleError(res, err); }
     return res.status(200).json(things);
   });
@@ -31,6 +31,7 @@ exports.show = function(req, res) {
 
 // Creates a new thing in the DB.
 exports.create = function(req, res) {
+  req.body.user = req.user;
   Thing.create(req.body, function(err, thing) {
     if(err) { return handleError(res, err); }
     return res.status(201).json(thing);
@@ -53,9 +54,12 @@ exports.update = function(req, res) {
 
 // Deletes a thing from the DB.
 exports.destroy = function(req, res) {
-  Thing.findById(req.params.id, function (err, thing) {
+  Thing.findById(req.params.id).populate('user','name').exec(function (err, thing) {
     if(err) { return handleError(res, err); }
     if(!thing) { return res.status(404).send('Not Found'); }
+    if(thing.user._id.toString() !== req.user._id.toString()){
+      return res.send(403);
+    }
     thing.remove(function(err) {
       if(err) { return handleError(res, err); }
       return res.status(204).send('No Content');

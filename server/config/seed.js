@@ -5,8 +5,13 @@
 
 'use strict';
 
+var Poll = require('../api/poll/poll.model');
 var Thing = require('../api/thing/thing.model');
 var User = require('../api/user/user.model');
+
+Poll.find({}).remove(function() {
+
+});
 
 Thing.find({}).remove(function() {
   Thing.create({
@@ -33,7 +38,7 @@ Thing.find({}).remove(function() {
 User.find({}).remove(function() {
   User.create({
     provider: 'local',
-    name: 'Test User',
+    name: 'test',
     email: 'test@test.com',
     password: 'test'
   }, {
@@ -42,6 +47,16 @@ User.find({}).remove(function() {
     name: 'Admin',
     email: 'admin@admin.com',
     password: 'admin'
+  }, {
+  	provider: 'local', 
+  	name: 'user1',
+  	email: 'user1@user.com',
+  	password: 'user1'
+  }, {
+  	provider: 'local', 
+  	name: 'user2',
+  	email: 'user2@user.com',
+  	password: 'user2'
   }, function() {
       console.log('finished populating users');
     }

@@ -1,5 +1,64 @@
-.thing-form {
-    margin: 20px 0;
+#my-polls {
+  text-align: center;
+  list-style-type: none;
+}
+
+.stacked-poll {
+  border:1px solid black;
+  height: 40px;
+}
+
+.stacked-poll span {
+  float: left;
+}
+
+.stacked-poll button {
+  float: right;
+}
+
+#error-message {
+  color: red;
+}
+
+#frontpage-info {
+	margin: 40px 0px 0px 0px;
+	text-align: center;
+}
+
+#new-poll {
+	width: 350px;	
+	text-align: center;
+}
+
+#more-options {
+	margin-bottom: 10px;
+}
+
+.poll-buttons {
+	width: 200px;
+}
+
+.fa {
+	font-size: 5em;
+}
+
+.fa-bolt {
+	color: yellow;
+}
+
+.fa-globe {
+	color: green;
+}
+
+.fa-facebook {
+	color: lightblue;
+}
+
+#signup {
+	width: 200px;
+	height: 50px;
+	font-size: 1.3em;	
+	padding-top: 10px;
 }
 
 #banner {
