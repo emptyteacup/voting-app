@@ -9,10 +9,17 @@ angular.module('votingAppApp')
     $scope.expanded = false;
     $scope.voted = false;
 
+    $('#options').append('<input type="text" class="form-control" placeholder="Pepsi">');
+    $('#options').append('<input type="text" class="form-control" placeholder="Coca-Cola">');
 
     $http.get('/api/polls').success(function(polls) {
       $scope.polls = polls;
     });
+      
+      
+    $scope.getAndExpandPolls = function() {
+      
+    };
 
 
     $scope.addPoll = function() {
@@ -23,7 +30,7 @@ angular.module('votingAppApp')
       
       for (var index = 0; index < $scope.polls.length; index++) {
         if ($scope.question === $scope.polls[index].question && Auth.getCurrentUser().name === $scope.polls[index].madeBy) {
-		  var errorMessage = '<span id="error-message">You already made this question.</span>'
+		  var errorMessage = '<span id="error-message">You already made this question.</span>';
 		  $('#question input').last().after(errorMessage);
 		  return;
 		}
@@ -34,15 +41,16 @@ angular.module('votingAppApp')
 	    $scope.options[$(this).val()] = 0;
 	  });
       
-      $http.post('/api/polls', { question: $scope.question, madeBy: Auth.getCurrentUser().name, options: $scope.options, votedBy: [] });
-      $scope.question = '';
-      
-      $http.get('/api/polls').success(function(polls) {
-        $scope.polls = polls;
-        $scope.expandedPoll = $scope.polls[$scope.polls.length - 1];
-        $scope.expandPoll($scope.expandedPoll);
+      $http.post('/api/polls', { question: $scope.question, madeBy: Auth.getCurrentUser().name, 
+      options: $scope.options, votedBy: [] }).success(function() {
+        $http.get('/api/polls').success(function(polls) {
+		  $scope.polls = polls;
+		  $scope.expandedPoll = $scope.polls[$scope.polls.length - 1];
+		  $scope.expandPoll($scope.expandedPoll);
+		});
       });
       
+      $scope.question = '';
     };
 
 
@@ -70,10 +78,10 @@ angular.module('votingAppApp')
 		labels: [],
 		datasets: [
 			{
-				fillColor: "rgba(220,220,220,0.2)",
-				strokeColor: "rgba(220,220,220,1)",
-				pointColor: "rgba(220,220,220,1)",
-				pointStrokeColor: "#fff",
+				fillColor: 'rgba(220,220,220,0.2)',
+				strokeColor: 'rgba(220,220,220,1)',
+				pointColor: 'rgba(220,220,220,1)',
+				pointStrokeColor: '#fff',
 				data: []
 			}
 		]
@@ -108,8 +116,8 @@ angular.module('votingAppApp')
       }
      
       for (var option in poll.options) {
-        var option = '<input type="radio" name="vote-options" value="' + option + '">' + option + '</input><br>';
-        $('#poll-options').append(option);
+        var input = '<input type="radio" name="vote-options" value="' + option + '">' + option + '</input><br>';
+        $('#poll-options').append(input);
       }
       $scope.expanded = true;
     };
@@ -142,7 +150,7 @@ angular.module('votingAppApp')
     
     
     $scope.testFunction = function() {
-      
+    
     };
     
 });
