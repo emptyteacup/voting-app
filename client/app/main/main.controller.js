@@ -1,5 +1,4 @@
 'use strict';
-//var Chart = require('~/Workspace/node-projects/voting-app/client/bower_components/Chart.js/Chart.js');
 
 angular.module('votingAppApp')
   .controller('MainCtrl', function ($scope, $http, Auth) {
@@ -9,17 +8,23 @@ angular.module('votingAppApp')
     $scope.expanded = false;
     $scope.voted = false;
 
-    $('#options').append('<input type="text" class="form-control" placeholder="Pepsi">');
-    $('#options').append('<input type="text" class="form-control" placeholder="Coca-Cola">');
+    //$('#options').append('<input type="text" class="form-control" placeholder="Pepsi">');
+    //$('#options').append('<input type="text" class="form-control" placeholder="Coca-Cola">');
 
     $http.get('/api/polls').success(function(polls) {
       $scope.polls = polls;
+	  $scope.filteredTodos = []
+	  ,$scope.currentPage = 1
+	  ,$scope.numPerPage = 4
+	  ,$scope.maxSize = 5;
+
+	  $scope.$watch('currentPage + numPerPage', function() {
+		var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+		, end = begin + $scope.numPerPage;
+	
+		$scope.filteredPolls = $scope.polls.slice(begin, end);
+	  });
     });
-      
-      
-    $scope.getAndExpandPolls = function() {
-      
-    };
 
 
     $scope.addPoll = function() {
@@ -71,7 +76,7 @@ angular.module('votingAppApp')
       $('#options').append('<input type="text" class="form-control">');
     };
 
-	 
+
 	var canvas = document.getElementById('chart'),
       ctx = canvas.getContext('2d'),
       startingData = {
@@ -86,7 +91,7 @@ angular.module('votingAppApp')
 			}
 		]
 	  };
-	var pollChart = new Chart(ctx).Bar(startingData, {animationSteps: 15}); 
+	$scope.pollChart = new Chart(ctx).Bar(startingData, {animationSteps: 15}); 
 
 
     $scope.expandPoll = function(poll) {
@@ -98,16 +103,16 @@ angular.module('votingAppApp')
       for (var index = 0; index < $scope.expandedPoll.votedBy.length; index++) {
         if ($scope.expandedPoll.votedBy[index] === Auth.getCurrentUser().name) {
          
-		  for (var index2 = 0; index2 < pollChart.datasets[0].bars.length; index2++) {
-			pollChart.removeData();
+		  for (var index2 = 0; index2 < $scope.pollChart.datasets[0].bars.length; index2++) {
+			$scope.pollChart.removeData();
 		  }  
 		  for (var option in $scope.expandedPoll.options) {
-			pollChart.addData([$scope.expandedPoll.options[option]], option);
+			$scope.pollChart.addData([$scope.expandedPoll.options[option]], option);
 		  }
-		  if (pollChart.datasets[0].bars.length > Object.keys($scope.expandedPoll.options).length) {
-			pollChart.removeData();
+		  if ($scope.pollChart.datasets[0].bars.length > Object.keys($scope.expandedPoll.options).length) {
+			$scope.pollChart.removeData();
 		  }
-		  pollChart.update();
+		  $scope.pollChart.update();
 		 		 
 		  $scope.voted = true;
           $scope.expanded = true;
@@ -150,7 +155,9 @@ angular.module('votingAppApp')
     
     
     $scope.testFunction = function() {
-    
+      $('#test').append($scope.polls[0].question);
     };
+    
+  
     
 });

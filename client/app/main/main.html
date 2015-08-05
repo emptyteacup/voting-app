@@ -13,6 +13,7 @@
     </div>
   </header>
   
+  <canvas id="chart" height="300" width="400"></canvas>
   <div class="container" id="frontpage-info">
     <div class="row">
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
@@ -57,90 +58,43 @@
   
 	<header class="hero-unit" id="banner">
 	  <div class="container">
-		<h1>Dashboard</h1>
-		<p class="lead">What would you like to do today?</p>
-		<div class="nav nav-pills">
-		  <a href="#" class="btn btn-success" id="tab1"
-		    ng-click="selectedTab = 1;" 
-		    ng-class="{active: selectedTab == 1}">
-			New Poll
-		  </a>
-		  <a href="#" class="btn btn-primary" id="tab2"
-		    ng-click="selectedTab = 2; expanded = false;" 
-		    ng-class="{active: selectedTab == 2}">
-		    My Polls
-		  </a>
-		  <a href="#" class="btn btn-default" id="tab3"
-		    ng-click="selectedTab = 3; totalVotes();" 
-		    ng-class="{active: selectedTab == 3}">
-		    Aggregate
-		  </a>
-		</div>
+		<h1>VotePlex</h1>
 	  </div>
 	</header> 
   
     <button ng-click="testFunction()">test Button</button>
   	<div id="test">testing</div>
-
-	<div class="tab-content" ng-show="selectedTab == null || selectedTab == 1">
-	  <div class="container" id="new-poll">
-		<h2>New Poll</h2>
-		<form role="form">
-		  <div class="form-group" id="question">
-		   <label>Name your poll</label>
-		   <input type="text" class="form-control"
-		   	 placeholder="What is your favorite brand?" ng-model="question">
+  	
+  	<div class="container">
+	  <h1>Polls</h1>
+	  <pagination 
+		ng-model="currentPage"
+		total-items="polls.length"
+		max-size="maxSize"  
+		boundary-links="true"
+		items-per-page="4">
+	  </pagination>
+	  <h4>{{polls.length}} total</h4>
+		<div ng-repeat="poll in filteredPolls">
+		  <div class="poll-box">
+			<h3>{{poll.question}}</h3>
+			<p>by {{ poll.madeBy }}</p>
+			<form role="form">
+			  <div class="form-group" ng-repeat="(option, votes) in poll.options">
+			    <input type="radio" name="vote-options" value="' + option + '">{{ option }}</input><br>
+			  </div>
+			  <input type="submit" class="btn btn-success" value="Vote!">
+			</form>
 		  </div>
-		  <div class="form-group" id="options">
-			<label>Options</label>
-		  </div>
-		  <input type="submit" class="btn btn-default poll-buttons" id="more-options" 
-			value="More Options" ng-click="moreOptions()">
-		  <br>
-		  <input type="submit" class="btn btn-success" 
-			value="Submit" ng-click="addPoll(); selectedTab = 2;">
-		</form>
-	  </div>
-	</div>
-  
-	<div class="tab-content" ng-show="selectedTab == 2">
-	  <ul class="container" id="my-polls" ng-repeat="poll in polls" ng-hide="expanded">
-		<li class="stacked-poll" ng-if="isMyPoll(poll)" ng-click="expandPoll(poll)">
-		  <span>{{ poll.question }}</span>
-		  <button type="button" ng-click="deletePoll(poll)">&times;</button>  
-		</li>
-	  </ul>
-	  <div class="container" id="expanded-poll" ng-show="expanded && !voted">
-		<h2>{{ expandedPoll.question }}</h2>
-		<p>by {{ expandedPoll.madeBy }}</p>
-		<form role="form">
-		  <div class="form-group" id="poll-options"></div>
-		  <input type="submit" class="btn btn-success" value="Vote!"
-		  ng-click="votePoll(expandedPoll)">
-		</form>
-	  </div>
-	  <div class="container" id="expanded-poll" ng-show="expanded && voted">
-		<h2>Voted Chart Area</h2>
-		<canvas id="chart" height="300" width="400"></canvas>
-	  </div>
-	</div>
-	
-	<div class="tab-content" ng-show="selectedTab == 3">
-	  <div class="container" id="aggregate-polls">
-	    <span id="total-voters"></span>
-	    <ul class="container" id="my-polls" ng-repeat="poll in polls" ng-hide="expanded">
-		<li ng-if="isMyPoll(poll)">
-		  <span>Poll Question: {{ poll.question }}</span><br>
-		  <span>Total votes on this poll: {{ poll.votedBy.length }}</span><br>
-		  <div ng-repeat="(option, votes) in poll.options">
-		    <span>{{option}}: {{ votes }} vote(s)</span>
-		  </div>
-		</li>
-	    </ul>
-	  </div>
-	</div>
-	
-  </div>
+		</div>
+	  <pagination 
+		ng-model="currentPage"
+		total-items="polls.length"
+		max-size="maxSize"  
+		boundary-links="true"
+		items-per-page="4">
+	  </pagination>
+    </div>
   
 </div>
 

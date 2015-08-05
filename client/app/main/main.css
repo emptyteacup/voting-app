@@ -1,3 +1,7 @@
+.poll-box {
+  border: 1px black solid;
+}
+
 #my-polls {
   text-align: center;
   list-style-type: none;
