@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('votingAppApp')
+var voting = angular.module('votingAppApp')
   .controller('MainCtrl', function ($scope, $http, Auth) {
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.getCurrentUser = Auth.getCurrentUser;
@@ -15,7 +15,7 @@ angular.module('votingAppApp')
       $scope.polls = polls;
 	  $scope.filteredTodos = []
 	  ,$scope.currentPage = 1
-	  ,$scope.numPerPage = 4
+	  ,$scope.numPerPage = 1
 	  ,$scope.maxSize = 5;
 
 	  $scope.$watch('currentPage + numPerPage', function() {
@@ -75,19 +75,31 @@ angular.module('votingAppApp')
     $scope.moreOptions = function() {
       $('#options').append('<input type="text" class="form-control">');
     };
+    
+    
+    $scope.addUniqueOption = function(poll) {
+      var option = $('#extra-option').val()
+      
+      poll.options[option] = 0;
+      $http.patch('/api/polls/' + poll._id, poll);
+      
+      $http.get('/api/polls').success(function(polls) {
+        $scope.polls = polls;
+      });
+    };
 
 
 	var canvas = document.getElementById('chart'),
       ctx = canvas.getContext('2d'),
       startingData = {
-		labels: [],
+		labels: ['option'],
 		datasets: [
 			{
 				fillColor: 'rgba(220,220,220,0.2)',
 				strokeColor: 'rgba(220,220,220,1)',
 				pointColor: 'rgba(220,220,220,1)',
 				pointStrokeColor: '#fff',
-				data: []
+				data: [1]
 			}
 		]
 	  };
@@ -128,18 +140,25 @@ angular.module('votingAppApp')
     };
 		
 
-    $scope.votePoll = function(expandedPoll) {
-      $scope.expandedPoll = expandedPoll;
-      
-      var checkedOption = $('#poll-options input[type=radio]:checked').val();
-      $scope.expandedPoll.options[checkedOption] += 1;
+    $scope.votePoll = function(poll) {
+      $scope.expandedPoll = poll;
+      var option;
+      if ($('#extra-option').val()) {
+        $('#test').append('notempty');
+        option = $('#extra-option').val();
+        $scope.expandedPoll.options[option] = 1;
+      } else {
+        $('#test').append('empty');
+        option = $('#poll-options input[type=radio]:checked').val();
+        $scope.expandedPoll.options[option] += 1;
+      }
       
       $scope.expandedPoll.votedBy = [Auth.getCurrentUser().name];
       $http.patch('/api/polls/' + $scope.expandedPoll._id, $scope.expandedPoll);
       
       $http.get('/api/polls').success(function(polls) {
-      $scope.polls = polls;
-    });
+        $scope.polls = polls;
+      });
     };
     
     
@@ -152,12 +171,31 @@ angular.module('votingAppApp')
       }
       $('#total-voters').text('Total Voters: ' + totalVotes);
     };
+  
+  
+    $scope.toggleExtraOption = function() {
+      if (!$('#extra-option').hasClass('clicked')) {
+        $('#extra-option').addClass('clicked');
+      }
+      $('#add-option').hide();
+      var checkedOption = $('#poll-options input[type=radio]:checked');
+      $(checkedOption).attr('checked', false);
+    }
+    
+    
+    $(document).mouseup(function (e) {
+    if (!$('#extra-option').is(e.target) && $('#extra-option').has(e.target).length === 0) {
+      $('#extra-option').removeClass('clicked');
+      $('#add-option').show();
+      if (!$('#vote').is(e.target)) {
+        $('#extra-option').val('');
+      }
+    }
+  });
     
     
     $scope.testFunction = function() {
-      $('#test').append($scope.polls[0].question);
+
     };
-    
-  
     
 });

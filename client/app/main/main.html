@@ -13,7 +13,7 @@
     </div>
   </header>
   
-  <canvas id="chart" height="300" width="400"></canvas>
+  
   <div class="container" id="frontpage-info">
     <div class="row">
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
@@ -66,33 +66,29 @@
   	<div id="test">testing</div>
   	
   	<div class="container">
-	  <h1>Polls</h1>
-	  <pagination 
-		ng-model="currentPage"
-		total-items="polls.length"
-		max-size="maxSize"  
-		boundary-links="true"
-		items-per-page="4">
-	  </pagination>
-	  <h4>{{polls.length}} total</h4>
-		<div ng-repeat="poll in filteredPolls">
-		  <div class="poll-box">
-			<h3>{{poll.question}}</h3>
-			<p>by {{ poll.madeBy }}</p>
-			<form role="form">
-			  <div class="form-group" ng-repeat="(option, votes) in poll.options">
-			    <input type="radio" name="vote-options" value="' + option + '">{{ option }}</input><br>
-			  </div>
-			  <input type="submit" class="btn btn-success" value="Vote!">
-			</form>
-		  </div>
+	  <canvas id="chart" height="300" width="400"></canvas><br>
+	  <h4>{{  polls.length  }} total</h4>
+	  <div ng-repeat="poll in filteredPolls">
+		<div class="poll-box">
+		  <h3>{{  poll.question  }}</h3>
+		  <p>by {{ poll.madeBy }}</p>
+		  <form role="form">
+			<div class="form-group" ng-repeat="(option, votes) in poll.options" id="poll-options">
+			  <input type="radio" name="vote-options" value="{{ option }}">{{ option }}</input><br>
+			</div>
+			<input type="text" placeholder="Your own option here." id="extra-option">
+			<input type="submit" class="btn btn-default" value="Add Option" 
+		      ng-click="toggleExtraOption()" id="add-option"></input>
+			<input type="submit" class="btn btn-success" value="Vote!" ng-click="votePoll(poll)" id="vote">
+		  </form>
 		</div>
+	  </div>
 	  <pagination 
 		ng-model="currentPage"
 		total-items="polls.length"
 		max-size="maxSize"  
 		boundary-links="true"
-		items-per-page="4">
+		items-per-page="1">
 	  </pagination>
     </div>
   
