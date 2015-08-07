@@ -75,18 +75,6 @@ var voting = angular.module('votingAppApp')
     $scope.moreOptions = function() {
       $('#options').append('<input type="text" class="form-control">');
     };
-    
-    
-    $scope.addUniqueOption = function(poll) {
-      var option = $('#extra-option').val()
-      
-      poll.options[option] = 0;
-      $http.patch('/api/polls/' + poll._id, poll);
-      
-      $http.get('/api/polls').success(function(polls) {
-        $scope.polls = polls;
-      });
-    };
 
 
 	var canvas = document.getElementById('chart'),
@@ -108,47 +96,53 @@ var voting = angular.module('votingAppApp')
 
     $scope.expandPoll = function(poll) {
       $scope.expandedPoll = poll;
-      $scope.voted = false;
       $scope.expanded = false;
+      $scope.voted = false;
+      $scope.votedByUser = false;
       $('#poll-options').empty();
+      
+      if ($scope.expandedPoll.votedBy.length > 0) {
+		for (var index2 = 0; index2 < $scope.pollChart.datasets[0].bars.length; index2++) {
+		  $scope.pollChart.removeData();
+		}  
+		for (var option in $scope.expandedPoll.options) {
+		  $scope.pollChart.addData([$scope.expandedPoll.options[option]], option);
+		}
+		if ($scope.pollChart.datasets[0].bars.length > Object.keys($scope.expandedPoll.options).length) {
+		  $scope.pollChart.removeData();
+		}
+		$scope.pollChart.update();
+			   
+		$scope.voted = true;
+	  }
       
       for (var index = 0; index < $scope.expandedPoll.votedBy.length; index++) {
         if ($scope.expandedPoll.votedBy[index] === Auth.getCurrentUser().name) {
-         
-		  for (var index2 = 0; index2 < $scope.pollChart.datasets[0].bars.length; index2++) {
-			$scope.pollChart.removeData();
-		  }  
-		  for (var option in $scope.expandedPoll.options) {
-			$scope.pollChart.addData([$scope.expandedPoll.options[option]], option);
-		  }
-		  if ($scope.pollChart.datasets[0].bars.length > Object.keys($scope.expandedPoll.options).length) {
-			$scope.pollChart.removeData();
-		  }
-		  $scope.pollChart.update();
-		 		 
-		  $scope.voted = true;
-          $scope.expanded = true;
-          return;
+          $scope.votedByUser = true;
+          break;
         }
       }
-     
-      for (var option in poll.options) {
-        var input = '<input type="radio" name="vote-options" value="' + option + '">' + option + '</input><br>';
+      
+      $('#test').append($scope.expandedPoll.question);
+      for (var option in $scope.expandedPoll.options) {
+        var input = '<input type="radio" name="vote-options" value="' + option + '">  ' + option + '</input><br>';
         $('#poll-options').append(input);
       }
       $scope.expanded = true;
     };
 		
 
-    $scope.votePoll = function(poll) {
-      $scope.expandedPoll = poll;
+    $scope.votePoll = function(expandedPoll) {
+      if (!$('#extra-option').val() && !$('#poll-options input[type=radio]:checked').val()) {
+        $('#vote').after('<span id="error-message2">   Please click or create an option.</span>');
+        return;
+      }
+      $scope.expandedPoll = expandedPoll;
       var option;
       if ($('#extra-option').val()) {
-        $('#test').append('notempty');
         option = $('#extra-option').val();
         $scope.expandedPoll.options[option] = 1;
       } else {
-        $('#test').append('empty');
         option = $('#poll-options input[type=radio]:checked').val();
         $scope.expandedPoll.options[option] += 1;
       }
@@ -159,6 +153,8 @@ var voting = angular.module('votingAppApp')
       $http.get('/api/polls').success(function(polls) {
         $scope.polls = polls;
       });
+      
+      $scope.expandPoll($scope.expandedPoll);
     };
     
     
@@ -192,6 +188,11 @@ var voting = angular.module('votingAppApp')
       }
     }
   });
+
+
+    $scope.removeWarning = function() {
+      $('#error-message2').remove();
+    }
     
     
     $scope.testFunction = function() {
