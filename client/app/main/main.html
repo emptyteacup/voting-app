@@ -57,7 +57,7 @@
 
 
 <div class="container">
-  
+    
   <div ng-hide="expanded">
 	<ul id="my-polls" ng-repeat="poll in polls">
 	  <li class="stacked-poll" ng-click="expandPoll(poll)">
@@ -76,27 +76,13 @@
 		<form role="form">
 		  <div class="form-group" id="poll-options"></div>
 		  <input type="text" placeholder="Your own option here." id="extra-option">
-		  <div ng-hide="isLoggedIn()">
-			<input type="submit" class="btn btn-default" value="Add Option" 
-			  ng-click="toggleExtraOption()" id="add-option" disabled>
-			<input type="submit" class="btn btn-success" value="Vote!" 
-			  ng-click="votePoll(expandedPoll)" disabled>
-			<span>Please sign up or log in in order to vote.</span>
-		  </div>
-		  <div ng-show="isLoggedIn() && votedByUser">
-			<input type="submit" class="btn btn-default" value="Add Option" 
-			  ng-click="toggleExtraOption()" id="add-option" disabled>
-			<input type="submit" class="btn btn-success" value="Vote!" 
-			  ng-click="votePoll(expandedPoll)" id="vote" disabled>
-			<span>You have already voted on this poll.</span>
-		  </div>
-		  <div ng-show="isLoggedIn() && !votedByUser">
-			<input type="submit" class="btn btn-default" value="Add Option" 
-			  ng-click="toggleExtraOption()" id="add-option">
-			<input type="submit" class="btn btn-success" value="Vote!" 
-			  ng-click="votePoll(expandedPoll)" id="vote">
-		  </div>
-		  
+		  <input type="submit" class="btn btn-default" value="Add Option" 
+			ng-click="toggleExtraOption()" id="add-option" ng-disabled="!isLoggedIn() || votedByUser">
+		  <input type="submit" class="btn btn-success" value="Vote!" 
+			ng-click="votePoll(expandedPoll)" id="vote" ng-disabled="!isLoggedIn() || votedByUser">
+		  <span ng-show="isLoggedIn() && !votedByUser && error">Please choose or create an option</span>
+		  <span ng-hide="isLoggedIn()">Please sign up or log in to vote.</span>
+		  <span ng-show="isLoggedIn() && votedByUser">You have already voted on this poll.</span>
 		</form>
 	  </div> 
 	  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -106,39 +92,5 @@
 	  </div>  
 	</div>
   </div>
+  
 </div>  
-
-
-<!--
-  <div class="container" id="expanded-poll" ng-show="expanded && voted">
-	<div class="row">
-	  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-		<span>{{ expandedPoll.question }}</span><br>
-		<span>Total votes on this poll: {{ expandedPoll.votedBy.length }}</span><br>
-		<div ng-repeat="(option, votes) in poll.options">
-		  <span>{{  option  }}: {{ votes }} vote(s)</span>
-		</div>
-	  </div>
-	  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" ng-show="voted">
-		<h2>Voted Chart Area</h2>
-		<canvas id="chart"></canvas>
-	  </div>
-	  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" ng-hide="voted">
-		<h2>Voted Chart Area</h2>
-		<span>No one has voted yet so there is no chart to show.</span>
-	  </div>
-	<div>
-	<footer class="footer">
-	  <div class="container">
-		<p>FreeCodeCamp Basejump |
-		<a href="http://www.freecodecamp.com/nancyj">Nancy Jiang</a>
-		</p>
-	  </div>
-	</footer>
-  </div>
-  
-  -->
-  
-  
-
-</div>

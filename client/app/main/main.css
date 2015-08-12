@@ -7,7 +7,7 @@
 }
 
 #extra-option.clicked {
-  width: 250px;
+  width: 200px;
   visibility: visible;
   -webkit-transition-duration: 1s; /* Safari */
   transition-duration: 1s;

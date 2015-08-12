@@ -7,6 +7,7 @@ var voting = angular.module('votingAppApp')
     $scope.polls = [];
     $scope.expanded = false;
     $scope.voted = false;
+    $scope.error = false;
 
     //$('#options').append('<input type="text" class="form-control" placeholder="Pepsi">');
     //$('#options').append('<input type="text" class="form-control" placeholder="Coca-Cola">');
@@ -99,6 +100,7 @@ var voting = angular.module('votingAppApp')
       $scope.expanded = false;
       $scope.voted = false;
       $scope.votedByUser = false;
+      $scope.error = false;
       $('#poll-options').empty();
       
       if ($scope.expandedPoll.votedBy.length > 0) {
@@ -134,7 +136,7 @@ var voting = angular.module('votingAppApp')
 
     $scope.votePoll = function(expandedPoll) {
       if (!$('#extra-option').val() && !$('#poll-options input[type=radio]:checked').val()) {
-        $('#vote').after('<span id="error-message2">   Please click or create an option.</span>');
+        $scope.error = true;
         return;
       }
       $scope.expandedPoll = expandedPoll;
@@ -178,7 +180,6 @@ var voting = angular.module('votingAppApp')
       $(checkedOption).attr('checked', false);
     }
     
-    
     $(document).mouseup(function (e) {
     if (!$('#extra-option').is(e.target) && $('#extra-option').has(e.target).length === 0) {
       $('#extra-option').removeClass('clicked');
@@ -196,7 +197,7 @@ var voting = angular.module('votingAppApp')
     
     
     $scope.testFunction = function() {
-
+      
     };
     
 });
