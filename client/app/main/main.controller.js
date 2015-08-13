@@ -1,17 +1,15 @@
 'use strict';
 
-var voting = angular.module('votingAppApp')
+angular.module('votingAppApp')
   .controller('MainCtrl', function ($scope, $http, Auth) {
+    $scope.name = $(location).attr('pathname');
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.getCurrentUser = Auth.getCurrentUser;
     $scope.polls = [];
     $scope.expanded = false;
     $scope.voted = false;
     $scope.error = false;
-
-    //$('#options').append('<input type="text" class="form-control" placeholder="Pepsi">');
-    //$('#options').append('<input type="text" class="form-control" placeholder="Coca-Cola">');
-
+    /*
     $http.get('/api/polls').success(function(polls) {
       $scope.polls = polls;
 	  $scope.filteredTodos = []
@@ -25,6 +23,25 @@ var voting = angular.module('votingAppApp')
 	
 		$scope.filteredPolls = $scope.polls.slice(begin, end);
 	  });
+    });
+    */
+    
+    $http.get('/api/polls').success(function(polls) {
+      $scope.polls = polls;
+      
+      var pollRegex = /^(\/)(.+)(\/)(.+)$/;
+	  if ($scope.name.match(pollRegex)) {
+		$scope.name = $scope.name.substr(1);
+		var madeBy = $scope.name.split('/')[0];
+		var question = $scope.name.split('/')[1];
+		$('#test').append($scope.name + madeBy + question);
+		for (var index = 0; index < $scope.polls.length; index++) {
+		  if ($scope.polls[index].madeBy === madeBy && $scope.polls[index].question === question) {
+			$scope.expandPoll($scope.polls[index]);
+			break;
+		  }
+		}
+	  }
     });
 
 
@@ -125,7 +142,6 @@ var voting = angular.module('votingAppApp')
         }
       }
       
-      $('#test').append($scope.expandedPoll.question);
       for (var option in $scope.expandedPoll.options) {
         var input = '<input type="radio" name="vote-options" value="' + option + '">  ' + option + '</input><br>';
         $('#poll-options').append(input);
@@ -197,7 +213,7 @@ var voting = angular.module('votingAppApp')
     
     
     $scope.testFunction = function() {
-      
+
     };
     
 });
