@@ -114,6 +114,9 @@ angular.module('votingAppApp')
 
     $scope.expandPoll = function(poll) {
       $scope.expandedPoll = poll;
+      var url = 'https://voting-app-emptyteacup.herokuapp.com/';
+      url += Auth.getCurrentUser().name + '/' + $scope.expandedPoll.question;
+      $scope.updateTwitterValues(url);
       $scope.expanded = false;
       $scope.voted = false;
       $scope.votedByUser = false;
@@ -194,7 +197,7 @@ angular.module('votingAppApp')
       $('#add-option').hide();
       var checkedOption = $('#poll-options input[type=radio]:checked');
       $(checkedOption).attr('checked', false);
-    }
+    };
     
     $(document).mouseup(function (e) {
     if (!$('#extra-option').is(e.target) && $('#extra-option').has(e.target).length === 0) {
@@ -207,9 +210,11 @@ angular.module('votingAppApp')
   });
 
 
-    $scope.removeWarning = function() {
-      $('#error-message2').remove();
-    }
+    $scope.updateTwitterValues = function(shareUrl) {
+	  $('#twitter-share-section').html('&nbsp;'); 
+	  $('#twitter-share-section').html('<a href="https://twitter.com/share" class="twitter-share-button" data-url="' + shareUrl + '" data-size="large" data-text="Check out the polls I made: " data-count="none">Tweet</a>');
+	  twttr.widgets.load();
+	};
     
     
     $scope.testFunction = function() {

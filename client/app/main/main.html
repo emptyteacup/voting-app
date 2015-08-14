@@ -1,5 +1,7 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+
 <!-- Logged-out View -->
 
 <div ng-hide="isLoggedIn()">
@@ -83,6 +85,9 @@
 		  <span ng-show="isLoggedIn() && !votedByUser && error">Please choose or create an option</span>
 		  <span ng-hide="isLoggedIn()">Please sign up or log in to vote.</span>
 		  <span ng-show="isLoggedIn() && votedByUser">You have already voted on this poll.</span>
+		  <span id="twitter-share-section" ng-if="isMyPoll(expandedPoll)">
+			<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://www.google.com/" data-size="large" data-text="Check out the polls I made: " data-count="none">Tweet</a>
+		  </span>
 		</form>
 	  </div> 
 	  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -93,4 +98,12 @@
 	</div>
   </div>
   
-</div>  
+</div> 
+
+<footer class="footer">
+   <div class="container">
+	 <p>FreeCodeCamp Basejump |
+	 <a href="http://www.freecodecamp.com/nancyj">Nancy Jiang</a>
+	 </p>
+   </div>
+ </footer> 
