@@ -6,3 +6,8 @@ client/bower_components
 dist
 /server/config/local.env.js
 npm-debug.log
+data/db/journal/lsn
+data/db/journal/prealloc.1
+data/db/journal/prealloc.2
+data/db/votingapp-test.0
+data/db/votingapp-test.ns

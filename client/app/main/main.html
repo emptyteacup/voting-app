@@ -1,12 +1,13 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+<link rel="stylesheet" href="./bower_components/font-awesome/css/font-awesome.min.css">
 
 <!-- Logged-out View -->
 
 <div ng-hide="isLoggedIn()">
 
-  <header class="hero-unit" id="banner">
+  <header class="hero-unit">
     <div>
       <h1>VotePlex</h1>
       <p class="lead">Create custom polls with live results.</p>
@@ -17,21 +18,21 @@
   <div class="container" id="frontpage-info">
     <div class="row">
       <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
-		<i class="fa fa-bolt"></i>
+		<i class="fa fa-bolt fa-5x"></i>
 		<h3>Live Results</h3>
 		<p>Live graphs show your poll results immediately in an easy to understand 
 		format. One graph will not provide the whole picture, that's why we provide multiple 
 		graph types to better describe your results.</p>
 	  </div>
 	  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
-		<i class="fa fa-globe"></i>
+		<i class="fa fa-globe fa-5x"></i>
 		<h3>Works Everywhere</h3>
 		<p>Traditional desktop computers now represent only 30% of Internet traffic. Your 
 		poll must work on the tablets, smart phones, netbooks and notebooks that your 
 		visitors are using. Our responsive designs do just that.</p>
 	  </div>
 	  <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
-		<i class="fa fa-facebook"></i>
+		<i class="fa fa-facebook fa-5x"></i>
 		<h3>Social Integration</h3>
 		<p>Free integrated facebook or traditional comments allow your poll voters to 
 		provide immediate feedback and discuss results. Social share buttons encourage your 
@@ -45,48 +46,51 @@
 <!-- Logged-in View -->
 
 <div ng-show="isLoggedIn()">
-  <header class="hero-unit" id="banner">
+  <header class="hero-unit">
 	<div class="container">
 	  <h1>VotePlex</h1>
 	</div>
   </header> 	
 </div>
 
-<!-- Poll Listing -->
+<!-- Stacked Poll -->
 
-<button ng-click="testFunction()">test Button</button>
-  <div id="test">testing</div>
-
-
-<div class="container">
+<div class="container" id="stacked-polls-container">
     
   <div ng-hide="expanded">
-	<ul id="my-polls" ng-repeat="poll in polls">
-	  <li class="stacked-poll" ng-click="expandPoll(poll)">
-		<span>{{ poll.question }}</span>
+	<ul id="stacked-polls" ng-repeat="poll in polls">
+	  <li id="stacked-poll">
+		<div ng-click="expandPoll(poll)">{{ poll.question }}</div>
 		<button type="button" ng-if="isMyPoll(poll)" ng-click="deletePoll(poll)">&times;</button>  
 	  </li>
 	</ul>
   </div>
 
-  <div class="container" id="expanded-poll" ng-show="expanded">
+  <div id="expanded-poll" ng-show="expanded">
     <div class="row">
 	  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-	    <a href="#" class="btn btn-primary" ng-click="expanded = false; removeWarning();">Back</a>
+	    <a href="#" class="btn btn-primary" ng-click="expanded = false;">Back</a>
 	    <h2>{{ expandedPoll.question }}</h2>
 		<p>by {{ expandedPoll.madeBy }}</p>
 		<form role="form">
 		  <div class="form-group" id="poll-options"></div>
 		  <input type="text" placeholder="Your own option here." id="extra-option">
 		  <input type="submit" class="btn btn-default" value="Add Option" 
-			ng-click="toggleExtraOption()" id="add-option" ng-disabled="!isLoggedIn() || votedByUser">
+			ng-click="toggleExtraOption()" id="add-option" 
+			ng-disabled="!isLoggedIn() || votedByUser">
 		  <input type="submit" class="btn btn-success" value="Vote!" 
-			ng-click="votePoll(expandedPoll)" id="vote" ng-disabled="!isLoggedIn() || votedByUser">
-		  <span ng-show="isLoggedIn() && !votedByUser && error">Please choose or create an option</span>
-		  <span ng-hide="isLoggedIn()">Please sign up or log in to vote.</span>
-		  <span ng-show="isLoggedIn() && votedByUser">You have already voted on this poll.</span>
+			ng-click="votePoll(expandedPoll)" id="vote" 
+			ng-disabled="!isLoggedIn() || votedByUser">
+		  <span ng-show="isLoggedIn() && !votedByUser && error">
+		    Please choose or create an option</span>
+		  <span ng-hide="isLoggedIn()">
+		    Please sign up or log in to vote.</span>
+		  <span ng-show="isLoggedIn() && votedByUser">
+		    You have already voted on this poll.</span>
 		  <span id="twitter-share-section" ng-if="isMyPoll(expandedPoll)">
-			<a href="https://twitter.com/share" class="twitter-share-button" data-url="https://www.google.com/" data-size="large" data-text="Check out the polls I made: " data-count="none">Tweet</a>
+			<a href="https://twitter.com/share" class="twitter-share-button" 
+			data-url="https://www.google.com/" data-size="large" 
+			data-text="Check out the poll I made: " data-count="none">Tweet</a>
 		  </span>
 		</form>
 	  </div> 

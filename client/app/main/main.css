@@ -1,3 +1,45 @@
+/* Front Page Info */
+
+#frontpage-info {
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 25px;
+}
+.fa-bolt {
+	color: yellow;
+}
+.fa-globe {
+	color: green;
+}
+.fa-facebook {
+	color: lightblue;
+}
+
+/* Stacked Polls */
+
+#stacked-polls {
+  text-align: center;
+  list-style-type: none;
+}
+#stacked-poll {
+  border:1px solid grey;
+  height: 40px;
+  border-radius: 5px;
+}
+#stacked-poll div {
+  text-align: left;
+  float: left;
+  padding: 10px 0px 0px 10px;
+  width: 96%;
+  height: 100%;
+}
+#stacked-poll button {
+  float: right;
+  height: 100%;
+  width: 4%;
+}
+
+/* Fancy Create your own option animation */
 
 #extra-option {
   width: 0px;
@@ -13,81 +55,13 @@
   transition-duration: 1s;
 }
 
-.poll-box {
-  border: 1px black solid;
-}
-
-#my-polls {
-  text-align: center;
-  list-style-type: none;
-}
-
-.stacked-poll {
-  border:1px solid black;
-  height: 40px;
-}
-
-.stacked-poll span {
-  float: left;
-}
-
-.stacked-poll button {
-  float: right;
-}
-
-#error-message {
-  color: red;
-}
-
-#frontpage-info {
-
-}
-
-#new-poll {
-	width: 350px;	
-	text-align: center;
-}
-
-#more-options {
-	margin-bottom: 10px;
-}
-
-.poll-buttons {
-	width: 200px;
-}
-
-.fa {
-	font-size: 5em;
-}
-
-.fa-bolt {
-	color: yellow;
-}
-
-.fa-globe {
-	color: green;
-}
-
-.fa-facebook {
-	color: lightblue;
-}
+/* Hero-unit, Footer, Navbar */
 
 #signup {
 	width: 200px;
 	height: 50px;
 	font-size: 1.3em;	
 	padding-top: 10px;
-}
-
-#banner {
-    border-bottom: none;
-    margin-top: -20px;
-}
-
-#banner h1 {
-    font-size: 60px;
-    line-height: 1;
-    letter-spacing: -1px;
 }
 
 .hero-unit {
@@ -97,6 +71,14 @@
     text-align: center;
     text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
     background: #4393B9;
+    border-bottom: none;
+    margin-top: -20px;
+}
+
+.hero-unit h1 {
+    font-size: 60px;
+    line-height: 1;
+    letter-spacing: -1px;
 }
 
 .footer {
